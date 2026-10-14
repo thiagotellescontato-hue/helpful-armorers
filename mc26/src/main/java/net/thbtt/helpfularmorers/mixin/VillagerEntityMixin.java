@@ -1,6 +1,7 @@
 package net.thbtt.helpfularmorers.mixin;
 
 import net.thbtt.helpfularmorers.compat.ProfessionCompat;
+import net.thbtt.helpfularmorers.compat.SwingCompat;
 import net.thbtt.helpfularmorers.compat.WorldCompat;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +16,6 @@ import java.util.UUID;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.golem.IronGolem;
@@ -136,7 +136,7 @@ public abstract class VillagerEntityMixin {
 
         if (ha$repairCooldown <= 0) {
             golem.heal(HA_REPAIR_AMOUNT);
-            armorer.swing(InteractionHand.MAIN_HAND);
+            SwingCompat.swingMainHand(armorer);
 
             world.playSound(
                     null,

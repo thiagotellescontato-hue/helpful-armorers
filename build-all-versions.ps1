@@ -25,20 +25,22 @@ $targets26 = @(
     @{ Version = "26.1"; Api = "0.145.1+26.1" },
     @{ Version = "26.1.1"; Api = "0.145.4+26.1.1" },
     @{ Version = "26.1.2"; Api = "0.152.1+26.1.2" },
-    @{ Version = "26.2"; Api = "0.153.0+26.2" }
+    @{ Version = "26.2"; Api = "0.153.0+26.2" },
+    @{ Version = "26.3"; Api = "0.161.0+26.3"; ModVersion = "1.2.1" }
 )
 
 function Copy-ModJar {
     param(
         [string] $BuildDirectory,
-        [string] $Version
+        [string] $Version,
+        [string] $ReleaseVersion = $modVersion
     )
 
     $jar = Get-ChildItem -LiteralPath $BuildDirectory -Filter "*.jar" |
         Where-Object { $_.Name -notlike "*-sources.jar" } |
         Select-Object -First 1
 
-    Copy-Item -LiteralPath $jar.FullName -Destination (Join-Path $output "helpfularmorers-$Version-$modVersion.jar")
+    Copy-Item -LiteralPath $jar.FullName -Destination (Join-Path $output "helpfularmorers-$Version-$ReleaseVersion.jar")
 }
 
 New-Item -ItemType Directory -Force -Path $output | Out-Null
@@ -68,15 +70,17 @@ if (-not (Test-Path (Join-Path $java25Home "bin\java.exe"))) {
 foreach ($target in $targets26) {
     Write-Host "Building Minecraft $($target.Version)"
     $env:JAVA_HOME = $java25Home
+    $targetModVersion = if ($target.ModVersion) { $target.ModVersion } else { $modVersion }
     & $gradle -p (Join-Path $root "mc26") clean build --no-daemon `
         "-Pminecraft_version=$($target.Version)" `
-        "-Pfabric_api_version=$($target.Api)"
+        "-Pfabric_api_version=$($target.Api)" `
+        "-Pmod_version=$targetModVersion"
 
     if ($LASTEXITCODE -ne 0) {
         throw "Build failed for Minecraft $($target.Version)"
     }
 
-    Copy-ModJar (Join-Path $root "mc26\build\libs") $target.Version
+    Copy-ModJar (Join-Path $root "mc26\build\libs") $target.Version $targetModVersion
 }
 
 $env:JAVA_HOME = $java21Home

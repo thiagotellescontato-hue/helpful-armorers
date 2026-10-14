@@ -11,6 +11,27 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
+sourceSets {
+	main {
+		java {
+			def mappingVariant = ["26.1", "26.1.1", "26.1.2", "26.2"].contains(project.minecraft_version.toString()) ? "legacy" : "current"
+			srcDir "src/${mappingVariant}/java"
+		}
+	}
+}
+
+if (project.minecraft_version.toString() == "26.3") {
+	fabricApi {
+		configureTests {
+			createSourceSet = true
+			modId = "helpfularmorers-gametest"
+			enableGameTests = true
+			enableClientGameTests = false
+			eula = true
+		}
+	}
+}
+
 processResources {
 	inputs.property "version", project.version
 	inputs.property "minecraft_version", project.minecraft_version

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "helpfularmorers-gametest",
+  "version": "1.2.1",
+  "name": "Helpful Armorers GameTest",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "net.thbtt.helpfularmorers.HelpfulArmorersGameTest"
+    ]
+  }
+}

@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string] $MinecraftVersion,
 
-    [string] $ModVersion = "1.2.0",
+    [string] $ModVersion = "1.2.1",
 
     [string] $ProjectId = "LfvbzzA6",
 
